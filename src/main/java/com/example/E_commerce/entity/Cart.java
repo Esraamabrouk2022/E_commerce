@@ -12,7 +12,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Shopping_cart {
+public class Cart {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,6 +22,6 @@ public class Shopping_cart {
     private User user;
 
     @OneToMany(mappedBy = "shoppingCart",cascade = CascadeType.ALL)
-    private List<Cart_Item> cartItems;
+    private List<CartItem> cartItems;
 
 }

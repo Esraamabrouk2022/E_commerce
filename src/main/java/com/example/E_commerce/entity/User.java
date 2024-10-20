@@ -30,7 +30,7 @@ public class User {
     private User_Role userRole;
 
     @OneToOne(mappedBy = "user",cascade = CascadeType.ALL)
-    private Shopping_cart shoppingCart;
+    private Cart shoppingCart;
 
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
 
