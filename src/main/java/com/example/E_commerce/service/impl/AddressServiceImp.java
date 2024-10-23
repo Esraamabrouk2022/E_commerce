@@ -4,6 +4,7 @@ import com.example.E_commerce.entity.Address;
 import com.example.E_commerce.exception.ResourceNotFoundException;
 import com.example.E_commerce.repository.AddressRepository;
 import com.example.E_commerce.service.AddressService;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -25,11 +26,13 @@ public class AddressServiceImp implements AddressService {
     }
 
     @Override
+    @Transactional
     public Address save(Address address) {
         return addressRepository.save(address);
     }
 
     @Override
+    @Transactional
     public Address update(Long id, Address newAddress) {
         Address address=addressRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Address not found"));
@@ -43,7 +46,8 @@ public class AddressServiceImp implements AddressService {
     }
 
     @Override
-    public void deleteAddress(Long id) {
+    @Transactional
+    public void delete(Long id) {
         addressRepository.deleteById(id);
     }
 }

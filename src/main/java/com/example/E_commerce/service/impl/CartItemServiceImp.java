@@ -5,6 +5,7 @@ import com.example.E_commerce.entity.CartItem;
 import com.example.E_commerce.exception.ResourceNotFoundException;
 import com.example.E_commerce.repository.CartItemRepository;
 import com.example.E_commerce.service.CartItemService;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,11 +16,13 @@ import java.util.List;
 public class CartItemServiceImp implements CartItemService {
     private final CartItemRepository cartItemRepository;
     @Override
+    @Transactional
     public CartItem save(CartItem cartItem) {
         return cartItemRepository.save(cartItem);
     }
 
     @Override
+    @Transactional
     public CartItem update(Long id,CartItem newCartItem) {
         CartItem cartItem=findCartItemById(id);
         cartItem.setShoppingCart(newCartItem.getShoppingCart());
@@ -35,6 +38,7 @@ public class CartItemServiceImp implements CartItemService {
     }
 
     @Override
+    @Transactional
     public void deleteCartItem(Long id) {
         cartItemRepository.deleteById(id);
     }

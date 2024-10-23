@@ -12,7 +12,7 @@ public interface AddressService {
     Address save(Address address);
 
     Address update(Long id, Address newAddress);
-    void deleteAddress(Long id);
+    void delete(Long id);
 
 
 }
