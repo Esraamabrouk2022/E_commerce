@@ -50,10 +50,5 @@ public class CategoryServiceImp implements CategoryService {
         return categoryRepository.findAll();
     }
 
-    @Override
-    public Category findCategoryByProductId(Long productId) {
-        Product product=productRepository.findById(productId)
-                .orElseThrow(()->new ResourceNotFoundException("This product not found"));
-        return categoryRepository.findByProduct(product) ;
-    }
+
 }
