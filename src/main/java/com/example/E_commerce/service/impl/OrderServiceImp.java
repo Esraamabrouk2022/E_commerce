@@ -36,7 +36,11 @@ public class OrderServiceImp implements OrderService {
                     log.error("Order with id {} doesn't found", id);
                     return new ResourceNotFoundException("Order with id" + id + " not found");
                 });
-
+        order.setDate(newOrder.getDate());
+        order.setOrderStutus(newOrder.getOrderStutus());
+        order.setUser(newOrder.getUser());
+        order.setTotal_price(newOrder.getTotal_price());
+        order.setOrderItems(newOrder.getOrderItems());
         Order updatedOrder = orderRepository.save(order);
         log.info("Order with id {} updated successfully ", updatedOrder.getId());
         return updatedOrder;
@@ -57,15 +61,15 @@ public class OrderServiceImp implements OrderService {
     @Override
     public List<Order> findAll() {
         log.info("Fetching All orders ");
-        List<Order> orders=orderRepository.findAll();
+        List<Order> orders = orderRepository.findAll();
         return orders;
     }
 
     @Override
     @Transactional
     public void delete(Long id) {
-    log.info("Deleting order with id {}",id);
-    orderRepository.deleteById(id);
-    log.info("Order with id {} deleted successfully",id);
+        log.info("Deleting order with id {}", id);
+        orderRepository.deleteById(id);
+        log.info("Order with id {} deleted successfully", id);
     }
 }
