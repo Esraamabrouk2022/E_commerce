@@ -69,6 +69,10 @@ public class OrderServiceImp implements OrderService {
     @Transactional
     public void delete(Long id) {
         log.info("Deleting order with id {}", id);
+        if(!orderRepository.existsById(id)){
+            log.error("There is no order with id {} ", id);
+            throw new ResourceNotFoundException("There is no order with id " + id);
+        }
         orderRepository.deleteById(id);
         log.info("Order with id {} deleted successfully", id);
     }

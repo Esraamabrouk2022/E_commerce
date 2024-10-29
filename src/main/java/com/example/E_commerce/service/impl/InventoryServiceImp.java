@@ -42,12 +42,12 @@ public class InventoryServiceImp implements InventoryService {
     @Override
     @Transactional
     public void delete(Long id) {
-        log.info("Deleting inventory with id " + id);
+
         if (!inventoryRepository.existsById(id)) {
             log.error("Inventory with id {} doesn't exist", id);
             throw new ResourceNotFoundException("The inventory with id " + id + " doesn't exist");
         }
-
+        log.info("Deleting inventory with id " + id);
         inventoryRepository.deleteById(id);
         log.info("Inventory with id {} deleted successfully", id);
     }

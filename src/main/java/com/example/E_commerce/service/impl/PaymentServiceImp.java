@@ -68,6 +68,10 @@ public class PaymentServiceImp implements PaymentService {
     @Override
     @Transactional
     public void delete(Long id) {
+        if(paymentRepository.existsById(id)){
+            log.error("There is no payment with id {} ", id);
+            throw new ResourceNotFoundException("There is no payment with id " + id);
+        }
         log.info("Deleting payment with id {}", id);
         paymentRepository.deleteById(id);
         log.info("Payment wiht id {} deleted successfully ", id);

@@ -78,7 +78,14 @@ public class OrderItemServiceImp implements OrderItemService {
     @Override
     @Transactional
     public void delete(Long id) {
+        if (orderItemRepository.existsById(id)){
+
+            log.error("There is no orderItem with id {} ", id);
+            throw new ResourceNotFoundException("There is no orderItem with id " + id);
+        }
+
         log.info("Deleting orderItem with id {}", id);
         orderItemRepository.deleteById(id);
+        log.info("OrderItem with id {} deleted succeddfully",id);
     }
 }
