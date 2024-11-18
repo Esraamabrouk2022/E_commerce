@@ -4,6 +4,7 @@ import com.example.E_commerce.entity.Enum.User_Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -17,8 +18,8 @@ import java.util.List;
 @Entity
 @Table(name = "user")
 @Data
+@EqualsAndHashCode
 @NoArgsConstructor
-@AllArgsConstructor
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,7 +43,11 @@ public class User implements UserDetails {
     private Date updatedAt;
 
     private String phone;
+    @Enumerated(EnumType.STRING)
     private User_Role userRole;
+    private Boolean locked = false;
+    private Boolean enabled = false;
+
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Cart shoppingCart;
@@ -55,6 +60,31 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Review> reviews;
 
+    public User(String name,
+                String email,
+                String password,
+                Date createdAt,
+                Date updatedAt,
+                String phone,
+                User_Role userRole,
+                Boolean locked,
+                Boolean enabled,
+                Cart shoppingCart,
+                List<Order> orders,
+                List<Review> reviews) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.phone = phone;
+        this.userRole = userRole;
+        this.locked = locked;
+        this.enabled = enabled;
+        this.shoppingCart = shoppingCart;
+        this.orders = orders;
+        this.reviews = reviews;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -73,7 +103,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return !locked;
     }
 
     @Override
@@ -83,6 +113,6 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return enabled;
     }
 }
