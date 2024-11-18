@@ -8,6 +8,7 @@ import java.util.List;
 
 public interface UserService {
 
+   public UserResponseDTO addUser(UserRequestDTO userRequestDTO);
    public UserResponseDTO getUserById(Long id);
    public UserResponseDTO findByEmail(String Email);
    public List<UserResponseDTO> getAllUsers();

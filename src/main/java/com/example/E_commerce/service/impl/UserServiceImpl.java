@@ -22,6 +22,13 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
 
     @Override
+    public UserResponseDTO addUser(UserRequestDTO userRequestDTO) {
+        User user=userMapper.toEntity(userRequestDTO);
+        User savedUser=userRepository.save(user);
+        return userMapper.toDto(savedUser);
+    }
+
+    @Override
     public UserResponseDTO getUserById(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new UsernameNotFoundException("User with id " + id + " not found"));

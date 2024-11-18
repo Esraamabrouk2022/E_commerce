@@ -15,6 +15,12 @@ import java.util.List;
 public class UserController {
     private final UserService userService;
 
+    @PostMapping
+    public UserResponseDTO addUser(@Valid @RequestParam UserRequestDTO userRequestDTO) {
+        return userService.addUser(userRequestDTO);
+    }
+    
+
     @GetMapping("/{id}")
     public UserResponseDTO getUserById(@PathVariable Long id) {
         return userService.getUserById(id);
