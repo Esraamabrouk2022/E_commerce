@@ -11,12 +11,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserRequestDTO {
-
     @NotNull
-    @Size(min=3,max=32,
-            message = "name size should be between" +
-                    " 3 and 32 digit or character")
-    private String userName;
+    @Size(min=5,max=250,
+            message = "password size should be between" +
+                    " 5 and 32 digit or character")
+    private String email;
 
     @NotNull(message = "can't be null to create new user")
     @Size(min=5,max=250,
@@ -25,11 +24,7 @@ public class UserRequestDTO {
     private String password;
 
 
-    @NotNull
-    @Size(min=5,max=250,
-            message = "password size should be between" +
-                    " 5 and 32 digit or character")
-    private String email;
+
 
     private User_Role role;
 }
