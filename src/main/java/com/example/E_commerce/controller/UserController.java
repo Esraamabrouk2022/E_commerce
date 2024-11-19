@@ -19,7 +19,7 @@ public class UserController {
     public UserResponseDTO addUser(@Valid @RequestParam UserRequestDTO userRequestDTO) {
         return userService.addUser(userRequestDTO);
     }
-    
+
 
     @GetMapping("/{id}")
     public UserResponseDTO getUserById(@PathVariable Long id) {

@@ -2,7 +2,6 @@ package com.example.E_commerce.entity;
 
 import com.example.E_commerce.entity.Enum.User_Role;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -27,7 +26,10 @@ public class User implements UserDetails {
     private Long id;
 
     @Column(nullable = false)
-    private String name;
+    private String firstName;
+
+    @Column(nullable = false)
+    private String lastName;
 
     @Column(unique = true, length = 100, nullable = false)
     private String email;
@@ -46,7 +48,7 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private User_Role userRole;
     private Boolean locked = false;
-    private Boolean enabled = false;
+    private Boolean enabled = true;
 
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
@@ -60,7 +62,8 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Review> reviews;
 
-    public User(String name,
+    public User(String firstName,
+                String lastName,
                 String email,
                 String password,
                 Date createdAt,
@@ -72,7 +75,8 @@ public class User implements UserDetails {
                 Cart shoppingCart,
                 List<Order> orders,
                 List<Review> reviews) {
-        this.name = name;
+        this.firstName=firstName;
+        this.lastName=lastName;
         this.email = email;
         this.password = password;
         this.createdAt = createdAt;
