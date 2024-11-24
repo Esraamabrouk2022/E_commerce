@@ -1,17 +1,24 @@
 package com.example.E_commerce.service;
 
 import com.example.E_commerce.entity.Address;
+import com.example.E_commerce.model.Address.AddressRequestDTO;
+import com.example.E_commerce.model.Address.AddressResponseDTO;
 
 import java.util.List;
 
 public interface AddressService {
-    Address getAddressById(Long id);
+    AddressResponseDTO getAddressById(Long id);
 
-    List<Address> findAddressesByUser_id(Long userId);
 
-    Address save(Address address);
+    List<AddressResponseDTO> findAddressesByUserId(Long userId);
 
-    Address update(Long id, Address newAddress);
+
+    AddressResponseDTO save(AddressRequestDTO addressRequestDTO);
+
+
+    AddressResponseDTO update(Long id, AddressRequestDTO newAddress);
+
+
     void delete(Long id);
 
 
