@@ -16,7 +16,7 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping
-    public UserResponseDTO addUser(@Valid @RequestParam UserRequestDTO userRequestDTO) {
+    public UserResponseDTO addUser(@Valid @RequestBody UserRequestDTO userRequestDTO) {
         return userService.addUser(userRequestDTO);
     }
 
@@ -33,7 +33,7 @@ public class UserController {
 
     @PutMapping("/{id}")
     public UserResponseDTO updateUser(@PathVariable Long id,
-                                      @RequestParam @Valid UserRequestDTO userRequestDTO
+                                      @RequestBody @Valid UserRequestDTO userRequestDTO
     ) {
         return userService.updateUser(id, userRequestDTO);
     }
