@@ -1,6 +1,5 @@
 package com.example.E_commerce.model.Cart;
 
-import com.example.E_commerce.entity.CartItem;
 import lombok.Data;
 
 import java.util.List;
@@ -9,5 +8,5 @@ import java.util.List;
 public class CartResponseDto {
    private Long id;
    private Long user_id;
-   private List<CartItem> cartItems;
+   private List<CartResponseDto> cartItems;
 }
