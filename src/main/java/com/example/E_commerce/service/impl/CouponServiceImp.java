@@ -2,12 +2,16 @@ package com.example.E_commerce.service.impl;
 
 import com.example.E_commerce.entity.Coupon;
 import com.example.E_commerce.exception.ResourceNotFoundException;
+import com.example.E_commerce.mapper.CouponMapper;
+import com.example.E_commerce.model.Coupon.CouponRequestDto;
+import com.example.E_commerce.model.Coupon.CouponResponseDto;
 import com.example.E_commerce.repository.CouponRepository;
 import com.example.E_commerce.service.CouponService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -15,76 +19,74 @@ import java.util.List;
 @Slf4j
 public class CouponServiceImp implements CouponService {
     private final CouponRepository couponRepository;
+    private final CouponMapper couponMapper;
 
     @Override
-    public Coupon save(Coupon coupon) {
-        log.info("Saving new Coupon {} :", coupon);
+    public CouponResponseDto save(CouponRequestDto couponRequestDto) {
+        Coupon coupon = couponMapper.toEntity(couponRequestDto);
         Coupon savedCoupon = couponRepository.save(coupon);
-        log.info("Coupon with id {} is saved successfully", savedCoupon.getId());
-        return savedCoupon;
+        log.info("Coupon saved successfully: {}", savedCoupon);
+        return couponMapper.toDto(savedCoupon);
     }
 
     @Override
-    public Coupon update(Long id, Coupon newcoupon) {
-        log.info("Updating coupon with id {}", id);
-
+    public CouponResponseDto findById(Long id) {
         Coupon coupon = couponRepository.findById(id)
-                .orElseThrow(() ->
-                {
-                    log.error("Coupon with id {} not found", id);
-                    return new ResourceNotFoundException("This coupon with id " + id + " not found");
-                });
-        coupon.setCode(newcoupon.getCode());
-        coupon.setUser(newcoupon.getUser());
-        coupon.setEndTime(newcoupon.getEndTime());
-        coupon.setDiscount_percentage(newcoupon.getDiscount_percentage());
-        coupon.setStartTime(newcoupon.getStartTime());
-        Coupon updatedCoupon = couponRepository.save(coupon);
-        log.info("Coupon with id {} is updated successfully", id);
-        return updatedCoupon;
+                .orElseThrow(() -> new ResourceNotFoundException("Coupon with id " + id + " not found"));
+        log.info("Fetched coupon: {}", coupon);
+        return couponMapper.toDto(coupon);
+    }
 
+    @Override
+    public List<CouponResponseDto> findAll() {
+        List<Coupon> coupons = couponRepository.findAll();
+        log.info("Fetched all coupons: {}", coupons);
+        return coupons.stream().map(couponMapper::toDto).toList();
+    }
+
+    @Override
+    public CouponResponseDto update(Long id, CouponRequestDto couponRequestDto) {
+        Coupon existingCoupon = couponRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Coupon with id " + id + " not found"));
+        existingCoupon.setCode(couponRequestDto.getCode());
+        existingCoupon.setStartTime(couponRequestDto.getStartTime());
+        existingCoupon.setEndTime(couponRequestDto.getEndTime());
+        existingCoupon.setDiscount_percentage(couponRequestDto.getDiscountPercentage());
+        existingCoupon.setActive(couponRequestDto.isActive());
+
+        Coupon updatedCoupon = couponRepository.save(existingCoupon);
+        log.info("Coupon updated successfully: {}", updatedCoupon);
+        return couponMapper.toDto(updatedCoupon);
     }
 
     @Override
     public void delete(Long id) {
-        log.info("Deleting coupon with id {} ", id);
         if (!couponRepository.existsById(id)) {
-            log.error("There is no coupon with id {} ", id);
-            throw new ResourceNotFoundException("There is no coupon with id " + id);
+            throw new ResourceNotFoundException("Coupon with id " + id + " not found");
         }
-
         couponRepository.deleteById(id);
-        log.info("Coupon with id {} id deleted successfully", id);
+        log.info("Coupon with id {} deleted successfully", id);
+    }
+
+
+    @Override
+    public CouponResponseDto findByCode(String code) {
+        Coupon coupon= couponRepository.findByCode(code)
+              .orElseThrow(() -> new ResourceNotFoundException("Coupon with code " + code + " not found"));
+
+        return couponMapper.toDto(coupon);
     }
 
     @Override
-    public List<Coupon> findAll() {
-        log.info("Fetching all coupons");
-        return couponRepository.findAll();
-    }
+    public CouponResponseDto validateCoupon(String code) {
+        Coupon coupon= couponRepository.findByCode(code)
+                .orElseThrow(() -> new ResourceNotFoundException("Coupon with code " + code + " not found"));
 
-    @Override
-    public Coupon findById(Long id) {
-        log.info("Fetching coupon with id {}", id);
-        return couponRepository.findById(id)
-                .orElseThrow(() -> {
-                    log.error("Coupon with id {} not found", id);
-                    return new ResourceNotFoundException("This coupon with id " + id + " not found");
-                });
-    }
-
-    @Override
-    public Coupon findByCode(String code) {
-        log.info("Fetching coupon with code {}", code);
-        return couponRepository.findByCode(code);
-    }
-
-    @Override
-    public Coupon validateCoupon(String code) {
-        log.info("Fetching coupon with code {}", code);
-        Coupon coupon = couponRepository.findByCode(code);
-        log.info("Validate Coupon with id {} ", coupon.getId());
-        coupon.setActive(true);
-        return coupon;
+        Date now = new Date();
+        if (!coupon.isActive() || coupon.getStartTime().after(now) || coupon.getEndTime().before(now)) {
+            throw new IllegalStateException("Coupon is either inactive or expired");
+        }
+        log.info("Coupon is valid: {}", coupon);
+        return couponMapper.toDto(coupon);
     }
 }
