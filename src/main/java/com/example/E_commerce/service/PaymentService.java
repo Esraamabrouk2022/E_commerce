@@ -1,13 +1,14 @@
 package com.example.E_commerce.service;
 
-import com.example.E_commerce.entity.Payment;
+import com.example.E_commerce.model.Payment.PaymentRequestDTO;
+import com.example.E_commerce.model.Payment.PaymentResponseDTO;
 
 import java.util.List;
 
 public interface PaymentService {
-    Payment save(Payment payment);
-    Payment update(Long id,Payment newPayment);
-    Payment findById(Long id);
-    List<Payment> findAll();
-    void delete(Long id);
+    PaymentResponseDTO createPayment(PaymentRequestDTO paymentRequestDTO);
+    PaymentResponseDTO updatePayment(Long id, PaymentRequestDTO paymentRequestDTO);
+    void deletePayment(Long id);
+    List<PaymentResponseDTO> getAllPayments();
+    PaymentResponseDTO getPaymentById(Long id);
 }
