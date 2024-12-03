@@ -1,14 +1,16 @@
 package com.example.E_commerce.service;
 
 import com.example.E_commerce.entity.Inventory;
+import com.example.E_commerce.model.InventoryDTO;
 
 import java.util.List;
 
 public interface InventoryService {
-    Inventory save(Inventory inventory);
-    Inventory update(Long id,Inventory newInventory);
+    InventoryDTO save(InventoryDTO inventoryDTO);
+    InventoryDTO update(Long id, InventoryDTO inventoryDTO);
     void delete(Long id);
-    List<Inventory> findAllInventories();
-    Inventory findById(Long id);
+
+    InventoryDTO findById(Long id);
+    List<InventoryDTO> findAllInventories();
 
 }
