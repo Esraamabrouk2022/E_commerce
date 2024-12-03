@@ -1,13 +1,14 @@
 package com.example.E_commerce.service;
 
-import com.example.E_commerce.entity.Review;
+import com.example.E_commerce.model.Review.ReviewRequestDTO;
+import com.example.E_commerce.model.Review.ReviewResponseDTO;
 
 import java.util.List;
 
 public interface ReviewService {
-    Review save(Review review);
-    Review update(Long id,Review newreview);
-    Review findById(Long id);
-    List<Review> findAll();
-    void delete(Long id);
+    ReviewResponseDTO createReview(ReviewRequestDTO reviewRequestDTO);
+    ReviewResponseDTO updateReview(Long id, ReviewRequestDTO reviewRequestDTO);
+    void deleteReview(Long id);
+    List<ReviewResponseDTO> getAllReviews();
+    ReviewResponseDTO getReviewById(Long id);
 }
