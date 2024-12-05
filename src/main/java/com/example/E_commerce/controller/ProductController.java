@@ -3,6 +3,7 @@ package com.example.E_commerce.controller;
 import com.example.E_commerce.model.Product.ProductRequestDTO;
 import com.example.E_commerce.model.Product.ProductResponseDTO;
 import com.example.E_commerce.service.ProductService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,6 +12,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/products")
 @AllArgsConstructor
+@Tag(name = "Product", description = "Endpoints for managing products")
 public class ProductController {
 
     private final ProductService productService;

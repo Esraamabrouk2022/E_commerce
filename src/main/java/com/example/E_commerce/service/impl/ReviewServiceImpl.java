@@ -59,7 +59,7 @@ public class ReviewServiceImpl implements ReviewService {
         existingReview.setText(reviewRequestDTO.getText());
         existingReview.setDate(reviewRequestDTO.getDate());
 
-    
+
         Review updatedReview = reviewRepository.save(existingReview);
         return reviewMapper.toDto(updatedReview);
     }

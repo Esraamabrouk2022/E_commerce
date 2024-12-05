@@ -18,10 +18,37 @@ This is an e-commerce platform built using **Spring Boot** for the backend and o
 - **Testing**: Spring Boot Starter Test
 
 ## Prerequisites
-Before running the project, ensure that you have the following installed:
-- **Java 21** or higher
-- **MySQL** (for the database)
-- **Maven** (for building the project)
+Java Development Kit (JDK) - Version 21 or later.
+Maven - Ensure Maven is installed and added to your PATH.
+MySQL Database - MySQL Server should be running.
+Postman (optional) - For testing REST APIs.
+
+-## MySQL Database Setup
+1-Log in to MySQL:
+Open your terminal or MySQL Workbench and log in using your credentials.
+mysql -u <your-username> -p
+2-Create the Database:
+CREATE DATABASE ecommerce_db; 
+3-Edit application.properties:
+Navigate to the src/main/resources/application.properties file and update the database credentials. Replace <username> and <password> with your MySQL credentials:
+spring.datasource.url=jdbc:mysql://localhost:3306/ecommerce_db
+spring.datasource.username=<username>
+spring.datasource.password=<password>
+spring.jpa.hibernate.ddl-auto=update
+4-Database Parameters:
+Database Name: ecommerce_db
+Host: localhost
+Port: 3306
+Username and Password: As per your setup.
 
 - ## Build and Run the Project
-- mvn spring-boot:run
+
+ cd ecommerce-platform
+ 2-Build the Project:
+ mvn clean install
+ 3-Run the Application:
+ mvn spring-boot:run
+ 4-Access the Application:
+ The backend server will be running on http://localhost:8082.
+
+
