@@ -6,11 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class OrderItemRequestDTO {
     private Long productId;
     private Integer quantity;
-    private double price;
     private Long orderId;
 }

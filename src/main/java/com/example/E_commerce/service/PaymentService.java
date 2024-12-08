@@ -11,4 +11,5 @@ public interface PaymentService {
     void deletePayment(Long id);
     List<PaymentResponseDTO> getAllPayments();
     PaymentResponseDTO getPaymentById(Long id);
+    PaymentResponseDTO updatePaymentStatus(Long paymentId, String paymentStatus);
 }

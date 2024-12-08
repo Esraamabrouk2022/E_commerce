@@ -14,7 +14,6 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class PaymentRequestDTO {
     private Long orderId;
-    private LocalDate date;
     private Payment_Method payment_Method;
     private Payment_stutus paymentStutus;
 }

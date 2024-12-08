@@ -10,11 +10,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/cart")
+@RequestMapping("/carts")
 @AllArgsConstructor
 public class CartController {
     private final CartService cartService;
-
+   
 
     @PostMapping
     public CartResponseDto createCart(@Valid @RequestBody CartRequestDto cartRequestDto) {
@@ -38,6 +38,8 @@ public class CartController {
     public void deleteCart(@PathVariable Long id) {
         cartService.delete(id);
     }
+
+
 }
 
 

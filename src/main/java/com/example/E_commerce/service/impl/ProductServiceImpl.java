@@ -9,6 +9,7 @@ import com.example.E_commerce.repository.CategoryRepository;
 import com.example.E_commerce.repository.ProductRepository;
 import com.example.E_commerce.service.ProductService;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,6 +17,7 @@ import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
@@ -24,10 +26,14 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductResponseDTO createProduct(ProductRequestDTO productRequestDTO) {
+        log.info("Creating product: {}", productRequestDTO);
+
         Category category = categoryRepository.findById(productRequestDTO.getCategoryId())
                 .orElseThrow(() -> new ResourceNotFoundException("Category not found with id: " + productRequestDTO.getCategoryId()));
+
         Product product = productMapper.toEntity(productRequestDTO);
         product.setCategory(category);
+
         Product savedProduct = productRepository.save(product);
         return productMapper.toDto(savedProduct);
     }

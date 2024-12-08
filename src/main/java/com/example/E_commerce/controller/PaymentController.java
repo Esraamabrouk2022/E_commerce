@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/payments")
+@RequestMapping("/payments")
 @AllArgsConstructor
 public class PaymentController {
 
@@ -41,4 +41,15 @@ public class PaymentController {
     public PaymentResponseDTO getPaymentById(@PathVariable Long id) {
         return paymentService.getPaymentById(id);
     }
+
+    @PutMapping("/{paymentId}/status")
+    public PaymentResponseDTO updatePaymentStatus(
+            @PathVariable Long paymentId,
+            @RequestParam String paymentStatus) {
+
+        paymentService.updatePaymentStatus(paymentId, paymentStatus);
+
+        return paymentService.getPaymentById(paymentId);
+    }
+
 }

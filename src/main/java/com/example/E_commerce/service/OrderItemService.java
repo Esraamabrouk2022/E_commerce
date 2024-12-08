@@ -16,4 +16,6 @@ public interface OrderItemService {
     void deleteOrderItem(Long id);
     List<OrderItemResponseDTO> getAllOrderItems();
     OrderItemResponseDTO getOrderItemById(Long id);
+    void updateItemQuantity(Long itemId, int quantity);
+
 }

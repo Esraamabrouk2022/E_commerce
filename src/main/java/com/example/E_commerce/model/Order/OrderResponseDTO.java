@@ -18,7 +18,7 @@ public class OrderResponseDTO {
     private LocalDate date;
     private double totalPrice;
     private Order_stutus orderStutus;
-    private String userName;
+    private Long userId;
     private List<Long> orderItemIds;
     private Long paymentId;
 }

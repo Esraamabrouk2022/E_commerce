@@ -1,6 +1,8 @@
 package com.example.E_commerce.service.impl;
 
 
+import com.example.E_commerce.entity.Enum.Order_stutus;
+import com.example.E_commerce.entity.Enum.Payment_stutus;
 import com.example.E_commerce.entity.Payment;
 import com.example.E_commerce.entity.Order;
 import com.example.E_commerce.exception.ResourceNotFoundException;
@@ -13,6 +15,7 @@ import com.example.E_commerce.service.PaymentService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,6 +34,7 @@ public class PaymentServiceImpl implements PaymentService {
 
         Payment payment = paymentMapper.toEntity(paymentRequestDTO);
         payment.setOrder(order);
+        payment.setDate(LocalDate.now());
 
         Payment savedPayment = paymentRepository.save(payment);
         return paymentMapper.toDto(savedPayment);
@@ -45,7 +49,6 @@ public class PaymentServiceImpl implements PaymentService {
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found with id: " + paymentRequestDTO.getOrderId()));
 
         existingPayment.setOrder(order);
-        existingPayment.setDate(paymentRequestDTO.getDate());
         existingPayment.setPayment_Method(paymentRequestDTO.getPayment_Method());
         existingPayment.setPaymentStutus(paymentRequestDTO.getPaymentStutus());
 
@@ -75,5 +78,22 @@ public class PaymentServiceImpl implements PaymentService {
         Payment payment = paymentRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Payment not found with id: " + id));
         return paymentMapper.toDto(payment);
+    }
+
+    @Override
+    public PaymentResponseDTO updatePaymentStatus(Long paymentId, String paymentStatus) {
+        Payment payment = paymentRepository.
+                findById(paymentId).
+                orElseThrow(() -> new ResourceNotFoundException("Payment not found"));
+        payment.setPaymentStutus(Payment_stutus.valueOf(paymentStatus));
+       Payment savedPayment= paymentRepository.save(payment);
+        Order order = payment.getOrder();
+        if ("Completed".equalsIgnoreCase(paymentStatus)) {
+            order.setOrderStutus(Order_stutus.Paid);
+        } else if ("Faild".equalsIgnoreCase(paymentStatus)) {
+            order.setOrderStutus(Order_stutus.Pending);
+        }
+        orderRepository.save(order);
+     return paymentMapper.toDto(savedPayment);
     }
 }

@@ -1,6 +1,7 @@
 package com.example.E_commerce.entity;
 
 import com.example.E_commerce.entity.Enum.Size;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

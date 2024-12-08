@@ -3,6 +3,7 @@ This is an e-commerce platform built using **Spring Boot** for the backend and o
 
 ## Features
 - **User Authentication**: Users can register, log in, and manage their accounts securely.
+-    **Email Verification**: Users receive an email verification link upon registration. Accounts remain inactive until verified. Tokens have an expiration time, and users can request a new verification email if needed.
 - **Product Management**: Admins can add, update, and delete products, and manage product categories.
 - **Order Management**: Users can add products to their cart, place orders, and track their order status.
 - **Payment Integration**: The platform integrates a basic payment processing system with status tracking.

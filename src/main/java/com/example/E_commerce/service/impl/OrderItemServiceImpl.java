@@ -36,6 +36,7 @@ public class OrderItemServiceImpl implements OrderItemService {
         OrderItem orderItem = orderItemMapper.toEntity(orderItemRequestDTO);
         orderItem.setProduct(product);
         orderItem.setOrder(order);
+        orderItem.setPrice(product.getPrice());
 
         OrderItem savedOrderItem = orderItemRepository.save(orderItem);
         return orderItemMapper.toDto(savedOrderItem);
@@ -54,7 +55,6 @@ public class OrderItemServiceImpl implements OrderItemService {
         existingOrderItem.setProduct(product);
         existingOrderItem.setOrder(order);
         existingOrderItem.setQuantity(orderItemRequestDTO.getQuantity());
-        existingOrderItem.setPrice(orderItemRequestDTO.getPrice());
 
         OrderItem updatedOrderItem = orderItemRepository.save(existingOrderItem);
         return orderItemMapper.toDto(updatedOrderItem);
@@ -81,5 +81,14 @@ public class OrderItemServiceImpl implements OrderItemService {
         OrderItem orderItem = orderItemRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("OrderItem not found with id: " + id));
         return orderItemMapper.toDto(orderItem);
+    }
+
+    @Override
+    public void updateItemQuantity(Long itemId, int quantity) {
+        OrderItem orderItem=orderItemRepository.
+                            findById(itemId).
+                            orElseThrow(()->new ResourceNotFoundException("OrderItem not found"));
+        orderItem.setQuantity(quantity);
+        orderItemRepository.save(orderItem);
     }
 }

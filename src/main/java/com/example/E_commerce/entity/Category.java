@@ -1,5 +1,6 @@
 package com.example.E_commerce.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,5 +21,6 @@ public class Category {
     private String name;
     private String description;
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
+
     private List<Product> products;
 }

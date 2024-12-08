@@ -1,6 +1,5 @@
 package com.example.E_commerce.service;
 
-import com.example.E_commerce.entity.Order;
 import com.example.E_commerce.model.Order.OrderRequestDTO;
 import com.example.E_commerce.model.Order.OrderResponseDTO;
 
@@ -12,4 +11,6 @@ public interface OrderService {
     void deleteOrder(Long id);
     List<OrderResponseDTO> getAllOrders();
     OrderResponseDTO getOrderById(Long id);
+
+     OrderResponseDTO recalculateTotalPrice(Long orderId);
 }
