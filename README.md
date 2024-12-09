@@ -8,6 +8,7 @@ This is an e-commerce platform built using **Spring Boot** for the backend and o
 - **Order Management**: Users can add products to their cart, place orders, and track their order status.
 - **Payment Integration**: The platform integrates a basic payment processing system with status tracking.
 - **Review System**: Users can rate and review products.
+- **Reset Password**
 
 ## Technologies Used
 - **Backend**: Spring Boot, Spring Data JPA, Spring Security, Spring Validation
