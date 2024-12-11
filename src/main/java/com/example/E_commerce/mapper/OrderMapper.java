@@ -11,9 +11,17 @@ import org.mapstruct.Named;
 
 import java.util.List;
 
+
 public interface OrderMapper {
+
+
+
     Order toEntity(OrderRequestDTO orderRequestDTO);
 
+
+
     OrderResponseDTO toDto(Order order);
+
+
 
 }

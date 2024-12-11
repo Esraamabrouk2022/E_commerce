@@ -5,17 +5,22 @@ import com.example.E_commerce.Security.JwtService;
 import com.example.E_commerce.entity.Enum.TokenType;
 import com.example.E_commerce.entity.Token;
 import com.example.E_commerce.entity.User;
+import com.example.E_commerce.exception.AuthException;
 import com.example.E_commerce.mapper.UserMapper;
 import com.example.E_commerce.model.Auth.AuthenticationRequest;
 import com.example.E_commerce.model.Auth.AuthenticationResponse;
+import com.example.E_commerce.model.Auth.ResetPasswordRequest;
 import com.example.E_commerce.model.User.UserRequestDTO;
+import com.example.E_commerce.repository.TokenRepository;
 import com.example.E_commerce.repository.UserRepository;
 import com.example.E_commerce.service.AuthenticationService;
 import com.example.E_commerce.service.EmailService;
 import com.example.E_commerce.service.TokenService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -23,6 +28,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -35,6 +42,7 @@ public class AuthenticationServiceImp implements AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
     private final TokenService tokenService;
+    private final TokenRepository tokenRepository;
 
     @Override
     public AuthenticationResponse register(UserRequestDTO userRequestDTO) {
@@ -74,7 +82,7 @@ public class AuthenticationServiceImp implements AuthenticationService {
                 .token(jwtToken)
                 .user(user)
                 .tokenType(TokenType.EMAIL_VERIFICATION)
-                .expiredAt(LocalDateTime.now().plusMinutes(15))
+                .expiredAt(LocalDateTime.now().plusHours(24))
                 .verifiedAt(null)
                 .build());
 
@@ -101,5 +109,32 @@ public class AuthenticationServiceImp implements AuthenticationService {
                 .token(jwtToken)
                 .userResponseDTO(userMapper.toDto(user))
                 .build();
+    }
+
+    @Override
+    @Transactional
+    public AuthenticationResponse resetPassword(ResetPasswordRequest resetPasswordRequest) {
+        User user = userRepository.findByEmail(resetPasswordRequest.getEmail())
+                .orElseThrow(() -> new AuthException("Email not found", HttpStatus.NOT_FOUND));
+
+        String token = UUID.randomUUID().toString();
+
+        Token passwordResetToken = new Token();
+        passwordResetToken.setToken(token);
+        passwordResetToken.setUser(user);
+        passwordResetToken.setTokenType(TokenType.PASSWORD_RESET);
+        passwordResetToken.setExpiredAt(LocalDateTime.now().plusHours(24));
+        Token savedToken= tokenRepository.save(passwordResetToken);
+
+        String resetUrl = "http://localhost:8082/auth/reset-password?token=" + token;
+        String emailContent = "<div style='font-family: Arial, sans-serif;'>"
+                + "<h1>Password Reset Request</h1>"
+                + "<p>Dear " + user.getUsername() + ",</p>"
+                + "<p>Click the button below to reset your password:</p>"
+                + "<p><a href='" + resetUrl + "' style='padding: 10px 20px; background-color: #4CAF50; color: white; text-decoration: none;'>Reset Password</a></p>"
+                + "<p>If you did not request a password reset, please ignore this email.</p>"
+                + "</div>";
+        emailService.send(user.getEmail(), "Reset Your Password", emailContent);
+        return new AuthenticationResponse(savedToken.getToken(),userMapper.toDto(user));
     }
 }

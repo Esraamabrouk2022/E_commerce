@@ -9,6 +9,7 @@ import org.mapstruct.Mapping;
 
 public interface OrderItemMapper {
 
+
     OrderItem toEntity(OrderItemRequestDTO orderItemRequestDTO);
 
     OrderItemResponseDTO toDto(OrderItem orderItem);

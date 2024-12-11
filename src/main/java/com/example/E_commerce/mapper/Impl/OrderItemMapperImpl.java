@@ -3,41 +3,62 @@ package com.example.E_commerce.mapper.Impl;
 import com.example.E_commerce.entity.Order;
 import com.example.E_commerce.entity.OrderItem;
 import com.example.E_commerce.entity.Product;
-import com.example.E_commerce.exception.ResourceNotFoundException;
 import com.example.E_commerce.mapper.OrderItemMapper;
 import com.example.E_commerce.model.OrderItem.OrderItemRequestDTO;
 import com.example.E_commerce.model.OrderItem.OrderItemResponseDTO;
-import com.example.E_commerce.repository.OrderRepository;
-import com.example.E_commerce.repository.ProductRepository;
-import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
-@AllArgsConstructor
 public class OrderItemMapperImpl implements OrderItemMapper {
-   private final OrderRepository orderRepository;
-   private final ProductRepository productRepository;
-
     @Override
     public OrderItem toEntity(OrderItemRequestDTO orderItemRequestDTO) {
-        OrderItem orderItem=new OrderItem();
-        Order order=orderRepository.findById(orderItemRequestDTO.getOrderId())
-                .orElseThrow(()->new ResourceNotFoundException("Order Not found"));
+        if (orderItemRequestDTO == null) {
+            return null;
+        }
 
-        orderItem.setOrder(order);
+        OrderItem orderItem = new OrderItem();
+
+        // Map productId to product entity's id
+        if (orderItemRequestDTO.getProductId() != null) {
+            orderItem.setProduct(new Product()); // Assuming you have a Product entity
+            orderItem.getProduct().setId(orderItemRequestDTO.getProductId());
+        }
+
+        // Map orderId to order entity's id
+        if (orderItemRequestDTO.getOrderId() != null) {
+            orderItem.setOrder(new Order());
+            orderItem.getOrder().setId(orderItemRequestDTO.getOrderId());
+        }
+
+        // Map other fields from DTO to entity
         orderItem.setQuantity(orderItemRequestDTO.getQuantity());
-        Product product=productRepository.findById(orderItemRequestDTO.getOrderId()).orElseThrow(()->new ResourceNotFoundException("Product not found"));
-        orderItem.setProduct(product);
+
         return orderItem;
     }
 
     @Override
     public OrderItemResponseDTO toDto(OrderItem orderItem) {
-     OrderItemResponseDTO orderItemResponseDTO=new OrderItemResponseDTO();
-     orderItemResponseDTO.setId(orderItem.getId());
-     orderItemResponseDTO.setOrderId(orderItem.getOrder().getId());
-     orderItemResponseDTO.setQuantity(orderItem.getQuantity());
-     orderItemResponseDTO.setPrice(orderItem.getPrice());
-     return orderItemResponseDTO;
+        if (orderItem == null) {
+            return null;
+        }
+
+        OrderItemResponseDTO orderItemResponseDTO = new OrderItemResponseDTO();
+
+        // Map product entity's id to productId in DTO
+        if (orderItem.getProduct() != null) {
+            orderItemResponseDTO.setProductId(orderItem.getProduct().getId());
+        }
+
+        // Map order entity's id to orderId in DTO
+        if (orderItem.getOrder() != null) {
+            orderItemResponseDTO.setOrderId(orderItem.getOrder().getId());
+        }
+
+        // Map other fields from entity to DTO
+        orderItemResponseDTO.setId(orderItem.getId());
+        orderItemResponseDTO.setQuantity(orderItem.getQuantity());
+        orderItemResponseDTO.setPrice(orderItem.getPrice());
+
+        return orderItemResponseDTO;
     }
 }

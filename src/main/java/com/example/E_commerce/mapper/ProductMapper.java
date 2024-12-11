@@ -8,8 +8,8 @@ import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 
-
 public interface ProductMapper {
+
 
     Product toEntity(ProductRequestDTO productRequestDTO);
     ProductResponseDTO toDto(Product product);

@@ -25,17 +25,20 @@ public class PaymentMapperImpl implements PaymentMapper {
         payment.setOrder(order);
         payment.setDate(LocalDate.now());
         payment.setPayment_Method(paymentRequestDTO.getPayment_Method());
-        return null;
+        return payment;
     }
 
     @Override
     public PaymentResponseDTO toDto(Payment payment) {
+        if(payment==null){
+            return null;
+        }
         PaymentResponseDTO paymentResponseDTO=new PaymentResponseDTO();
-        paymentResponseDTO.setOrderId(payment.getOrder().getId());
-        paymentResponseDTO.setId(payment.getId());
-        paymentResponseDTO.setPaymentStutus(payment.getPaymentStutus());
+        paymentResponseDTO.setDate(payment.getDate());
         paymentResponseDTO.setPayment_Method(payment.getPayment_Method());
-
+        paymentResponseDTO.setPaymentStutus(payment.getPaymentStutus());
+        paymentResponseDTO.setId(payment.getId());
+        paymentResponseDTO.setOrderId(payment.getOrder().getId());
         return paymentResponseDTO;
     }
 }
