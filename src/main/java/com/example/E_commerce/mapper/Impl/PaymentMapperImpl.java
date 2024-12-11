@@ -1,8 +1,9 @@
-package com.example.E_commerce.mapper;
+package com.example.E_commerce.mapper.Impl;
 
 import com.example.E_commerce.entity.Order;
 import com.example.E_commerce.entity.Payment;
 import com.example.E_commerce.exception.ResourceNotFoundException;
+import com.example.E_commerce.mapper.PaymentMapper;
 import com.example.E_commerce.model.Payment.PaymentRequestDTO;
 import com.example.E_commerce.model.Payment.PaymentResponseDTO;
 import com.example.E_commerce.repository.OrderRepository;
@@ -13,7 +14,7 @@ import java.time.LocalDate;
 
 @Component
 @AllArgsConstructor
-public class PaymentMapperImpl implements PaymentMapper{
+public class PaymentMapperImpl implements PaymentMapper {
     private final OrderRepository orderRepository;
     @Override
     public Payment toEntity(PaymentRequestDTO paymentRequestDTO) {
@@ -29,6 +30,12 @@ public class PaymentMapperImpl implements PaymentMapper{
 
     @Override
     public PaymentResponseDTO toDto(Payment payment) {
-        return null;
+        PaymentResponseDTO paymentResponseDTO=new PaymentResponseDTO();
+        paymentResponseDTO.setOrderId(payment.getOrder().getId());
+        paymentResponseDTO.setId(payment.getId());
+        paymentResponseDTO.setPaymentStutus(payment.getPaymentStutus());
+        paymentResponseDTO.setPayment_Method(payment.getPayment_Method());
+
+        return paymentResponseDTO;
     }
 }
