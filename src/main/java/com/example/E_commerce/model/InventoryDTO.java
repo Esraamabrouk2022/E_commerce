@@ -1,11 +1,13 @@
 package com.example.E_commerce.model;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
 public class InventoryDTO {
     private Long id;
+    @NotNull
     private Long productId;
-    private String productName;
+    @NotNull
     private Integer stockQuantity;
 }

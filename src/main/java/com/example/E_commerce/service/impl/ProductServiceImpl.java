@@ -10,8 +10,13 @@ import com.example.E_commerce.repository.ProductRepository;
 import com.example.E_commerce.service.ProductService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.awt.print.Pageable;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -64,12 +69,34 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductResponseDTO> getAllProducts() {
-        return productRepository.findAll()
-                .stream()
-                .map(productMapper::toDto)
-                .collect(Collectors.toList());
+    public Page<ProductResponseDTO> getAllProducts(int page,
+                                                   int size,
+                                                   String category,
+                                                   Double minPrice,
+                                                   Double maxPrice) {
+        PageRequest pageable = PageRequest.of(page, size);
+
+        Specification<Product> spec = Specification.where(null);
+
+        if (category != null && !category.isEmpty()) {
+            spec = spec.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.equal(root.join("category").get("name"), category));
+        }
+
+        if (minPrice != null) {
+            spec = spec.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.greaterThanOrEqualTo(root.get("price"), minPrice));
+        }
+
+        if (maxPrice != null) {
+            spec = spec.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.lessThanOrEqualTo(root.get("price"), maxPrice));
+        }
+
+        return productRepository.findAll(spec, pageable)
+                .map(productMapper::toDto);
     }
+
 
     @Override
     public ProductResponseDTO getProductById(Long id) {

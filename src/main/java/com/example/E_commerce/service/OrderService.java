@@ -6,7 +6,7 @@ import com.example.E_commerce.model.Order.OrderResponseDTO;
 import java.util.List;
 
 public interface OrderService {
-    OrderResponseDTO createOrder(OrderRequestDTO orderRequestDTO);
+    OrderResponseDTO createOrder(OrderRequestDTO orderRequestDTO) throws IllegalAccessException;
     OrderResponseDTO updateOrder(Long id, OrderRequestDTO orderRequestDTO);
     void deleteOrder(Long id);
     List<OrderResponseDTO> getAllOrders();

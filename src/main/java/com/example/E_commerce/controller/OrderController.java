@@ -20,7 +20,7 @@ public class OrderController {
     private final OrderService orderService;
     private final OrderItemService orderItemService;
     @PostMapping
-    public OrderResponseDTO createOrder(@RequestBody OrderRequestDTO orderRequestDTO) {
+    public OrderResponseDTO createOrder(@RequestBody OrderRequestDTO orderRequestDTO) throws IllegalAccessException {
         return orderService.createOrder(orderRequestDTO);
     }
 

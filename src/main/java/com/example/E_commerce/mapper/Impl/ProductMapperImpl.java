@@ -32,17 +32,14 @@ public class ProductMapperImpl implements ProductMapper {
 
     @Override
     public ProductResponseDTO toDto(Product product) {
-        if (product == null) {
-            return null;
-        }
+
         ProductResponseDTO productResponseDTO = new ProductResponseDTO();
-
-
         productResponseDTO.setId(product.getId());
         productResponseDTO.setName(product.getName());
         productResponseDTO.setPrice(product.getPrice());
         productResponseDTO.setImagePath(product.getImage_path());
         productResponseDTO.setCategoryId(product.getCategory().getId());
+        productResponseDTO.setSize(product.getSize());
         return productResponseDTO;
     }
 }

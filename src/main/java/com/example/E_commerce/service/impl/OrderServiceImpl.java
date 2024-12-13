@@ -1,11 +1,13 @@
 package com.example.E_commerce.service.impl;
 
-import com.example.E_commerce.entity.Order;
+import com.example.E_commerce.entity.*;
 import com.example.E_commerce.exception.ResourceNotFoundException;
 import com.example.E_commerce.model.Order.OrderRequestDTO;
 import com.example.E_commerce.model.Order.OrderResponseDTO;
+import com.example.E_commerce.repository.InventoryRepository;
 import com.example.E_commerce.repository.OrderRepository;
 
+import com.example.E_commerce.repository.ProductRepository;
 import com.example.E_commerce.service.OrderService;
 import lombok.AllArgsConstructor;
 
@@ -15,10 +17,10 @@ import java.time.LocalDate;
 import java.util.List;
 
 
-import com.example.E_commerce.entity.User;
 import com.example.E_commerce.mapper.OrderMapper;
 
 import com.example.E_commerce.repository.UserRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 
 import java.util.stream.Collectors;
@@ -30,12 +32,26 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
     private final OrderMapper orderMapper;
+    private final InventoryRepository inventoryRepository;
 
     @Override
-    public OrderResponseDTO createOrder(OrderRequestDTO orderRequestDTO) {
+    @Transactional
+    public OrderResponseDTO createOrder(OrderRequestDTO orderRequestDTO) throws IllegalAccessException {
         User user = userRepository.findById(orderRequestDTO.getUserId())
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + orderRequestDTO.getUserId()));
         Order order = orderMapper.toEntity(orderRequestDTO);
+        List<OrderItem> orderItems = order.getOrderItems();
+        for (OrderItem orderItem : orderItems) {
+            if (orderItem.getProduct() == null) {
+                throw new IllegalAccessException("Product information is missing for one of the order items.");
+            }
+            Inventory inventory = inventoryRepository.findByProductId(orderItem.getProduct().getId());
+            if (inventory.getStockQuantity() < orderItem.getQuantity()) {
+                throw new IllegalAccessException("Insufficient stock for product: " + orderItem.getProduct().getName());
+            }
+            inventory.setStockQuantity(inventory.getStockQuantity() - orderItem.getQuantity());
+            inventoryRepository.save(inventory);
+        }
         order.setUser(user);
         order.setDate(LocalDate.now());
         double totalPrice = order.getOrderItems().stream()
@@ -101,7 +117,7 @@ public class OrderServiceImpl implements OrderService {
                 .sum();
 
         order.setTotal_price(totalPrice);
-        Order updatedOrder= orderRepository.save(order);
+        Order updatedOrder = orderRepository.save(order);
         return orderMapper.toDto(updatedOrder);
     }
 }
